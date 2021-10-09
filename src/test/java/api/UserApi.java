@@ -1,10 +1,11 @@
 package api;
 
 import com.github.javafaker.Faker;
+import com.google.gson.Gson;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
-import model.User;
+import model.Data;
 import org.junit.jupiter.api.*;
 
 
@@ -14,8 +15,8 @@ import static io.restassured.RestAssured.given;
 
 public class UserApi {
 
-    private String idUsuario = null;
-    private String nomeUsuario = null;
+    private String idUser = null;
+    private String nameUser = null;
     private String email = null;
     private String basePath = "/public/v1";
     private RequestSpecification authorization;
@@ -27,44 +28,44 @@ public class UserApi {
 
     @BeforeEach
     public void setUp(){
+        System.out.println("Starting preconditions.");
         RestAssured.baseURI = "https://gorest.co.in";
         authorization = given().header("Authorization", "Bearer " + TOKEN);
-        geraMassa();
+        generate();
     }
 
     @Test
-    @DisplayName("Requisição para validar um usuário")
+    @DisplayName("Request to validate a user")
     public void userSuccess(){
-        Response response = authorization.basePath(basePath).get(String.format("/users/%s", this.idUsuario));
+        System.out.println("Request GET for a new user");
+        Response response = authorization.basePath(basePath).get(String.format("/users/%s", this.idUser));
         Assertions.assertEquals(STATUS_CODE_OK, response.getStatusCode());
-        Assertions.assertEquals(this.nomeUsuario, response.getBody().jsonPath().getString("data.name"));
+        Assertions.assertEquals(this.nameUser, response.getBody().jsonPath().getString("data.name"));
         Assertions.assertEquals(this.email, response.getBody().jsonPath().getString("data.email"));
     }
 
     @Test
-    @DisplayName("Requisição para validar um usuário inexistente")
+    @DisplayName("Request to validate an invalid user")
     public void userFail(){
-        Response response = authorization.basePath(basePath).get("/users/1957");
+        System.out.println("Request GET for a invalid user");
+        Response response = authorization.basePath(basePath).get(String.format("/users/%s99", this.idUser));
         Assertions.assertEquals(STATUS_CODE_ERROR, response.getStatusCode());
         Assertions.assertEquals(MESSAGE_ERROR, response.getBody().jsonPath().getString("data.message"));
     }
 
-    public void geraMassa(){
-       Response resposta =  authorization.basePath(basePath).header("Content-Type", "application/json").body(bodyUsuario()).post("/users");
-       Assertions.assertEquals(STATUS_CODE_CREATED, resposta.getStatusCode());
-       this.idUsuario = String.valueOf(resposta.getBody().jsonPath().getInt("data.id"));
+    private void generate(){
+        System.out.println("Submitting a new user.");
+        Response response =  authorization.basePath(basePath).header("Content-Type", "application/json").body(createdBodyUser()).post("/users");
+        Assertions.assertEquals(STATUS_CODE_CREATED, response.getStatusCode());
+        this.idUser = String.valueOf(response.getBody().jsonPath().getInt("data.id"));
+        System.out.println("New user id: " + this.idUser);
     }
 
-    public void geraMassaObject(){
-        Response resposta =  authorization.basePath(basePath).header("Content-Type", "application/json").body(bodyUsuario()).post("/users");
-        Assertions.assertEquals(STATUS_CODE_CREATED, resposta.getStatusCode());
-        this.idUsuario = String.valueOf(resposta.getBody().jsonPath().getInt("data.id"));
-    }
-
-    public String bodyUsuario(){
+    private String createdBodyUser(){
         Faker faker = new Faker(new Locale("pt-BR"));
-        this.nomeUsuario = faker.name().fullName();
+        System.out.println("Create a new user.");
+        this.nameUser = faker.name().fullName();
         this.email = faker.internet().emailAddress();
-        return String.format("{\"name\":\"%s\", \"gender\":\"male\", \"email\":\"%s\", \"status\":\"active\"}", this.nomeUsuario, email);
+        return new Gson().toJson(new Data(this.nameUser, "male", this.email, "active"));
     }
 }

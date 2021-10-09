@@ -1,13 +1,13 @@
 package model;
 
-public class User {
+public class Data {
     private int id;
     private String name;
     private String gender;
     private String email;
     private String status;
 
-    public User(int id, String name, String gender, String email, String status) {
+    public Data(int id, String name, String gender, String email, String status) {
         this.id = id;
         this.name = name;
         this.gender = gender;
@@ -15,7 +15,7 @@ public class User {
         this.status = status;
     }
 
-    public User(String name, String gender, String email, String status) {
+    public Data(String name, String gender, String email, String status) {
         this.name = name;
         this.gender = gender;
         this.email = email;
@@ -62,14 +62,4 @@ public class User {
         this.status = status;
     }
 
-    @Override
-    public String toString() {
-        return "{" +
-                "name: " + name + '\'' +
-                ", gender: '" + gender + '\'' +
-                ", email: '" + email + '\'' +
-                ", status: '" + status + '\'' +
-                '}';
-
-    }
 }
