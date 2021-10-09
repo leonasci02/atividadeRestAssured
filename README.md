@@ -18,15 +18,16 @@ Escolher uma API pública para consumir e criar testes automatizados com o restA
 https://gorest.co.in
 
 *** OBS.: Para consumir a API do gorest é necessário ter um token authorization *** 
-*** OBS2.: O token authorization se encontra como uma constante no projeto
+
+*** OBS2.: O token authorization se encontra como uma constante no projeto ***
 
 ## Cenários de Testes
 
 ** Pré-condição
 
-Realiza uma requisição do tipo POST na URL: https://gorest.co.in/public/v1/users criando um usuário no sistema
+Realiza uma requisição do tipo POST na URL: https://gorest.co.in/public/v1/users criando um novo usuário no sistema.
 
-### Cenários de Sucesso
+### Cenário de Sucesso
 
 Realiza uma requisição do tipo GET na URL https://gorest.co.in/public/v1/users/{{idCriado}} passando o id criado na pré-condição.
 
