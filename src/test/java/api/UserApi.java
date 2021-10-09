@@ -15,7 +15,7 @@ import static io.restassured.RestAssured.given;
 
 public class UserApi {
 
-    private String idUser = null;
+    private int idUser;
     private String nameUser = null;
     private String email = null;
     private String basePath = "/public/v1";
@@ -57,7 +57,7 @@ public class UserApi {
         System.out.println("Submitting a new user.");
         Response response =  authorization.basePath(basePath).header("Content-Type", "application/json").body(createdBodyUser()).post("/users");
         Assertions.assertEquals(STATUS_CODE_CREATED, response.getStatusCode());
-        this.idUser = String.valueOf(response.getBody().jsonPath().getInt("data.id"));
+        this.idUser = response.getBody().jsonPath().getInt("data.id");
         System.out.println("New user id: " + this.idUser);
     }
 
