@@ -1,6 +1,6 @@
 # atividadeRestAssured
 
-Segunda atividade do curso Automação de testes
+Segunda atividade do curso automação de testes
 
 Professor: João Victorino
 
